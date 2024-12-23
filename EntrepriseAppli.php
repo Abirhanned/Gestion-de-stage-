@@ -1,23 +1,34 @@
 <?php  
-// On inclut la connexion à la base  
+// Démarrer la session
+session_start();
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_role'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
+    exit();
+}
+
+// Inclure la connexion à la base
 require_once('connexion.php');  
 
 try {
-    // Requête SQL pour récupérer les colonnes nécessaires
-    $sql = 'SELECT raison_sociale, nom_contact, nom_resp, rue_entreprise, cp_entreprise, ville_entreprise, site_entreprise 
-            FROM entreprise';
+    // Requête SQL avec table intermédiaire
+    $sql = 'SELECT entreprise.raison_sociale, entreprise.nom_contact, entreprise.nom_resp, 
+                   entreprise.rue_entreprise, entreprise.cp_entreprise, entreprise.ville_entreprise, 
+                   entreprise.site_entreprise, specialite.libelle AS specialite
+            FROM entreprise
+            LEFT JOIN spec_entreprise ON entreprise.num_entreprise = spec_entreprise.num_entreprise
+            LEFT JOIN specialite ON spec_entreprise.num_spec = specialite.num_spec';
+    
     $query = $db->prepare($sql);
     $query->execute();
     $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-    if (count($result) > 0) {
-        // Parcours des résultats
-    } else {
-        echo "<tr><td colspan='6'>Aucune donnée trouvée.</td></tr>";
-    }
 } catch (PDOException $e) {
     echo "Erreur : " . $e->getMessage();
+    exit();
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -26,31 +37,43 @@ try {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <title>Stage BTS</title>
+    <title>Stage BTS - Entreprise</title>
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .container {
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #e0e0e0;
-        }
-        table {
-            border-collapse: collapse;
+      body {
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-        }
-        th, td {
-         padding: 15px;
-         text-align: left;}
+.container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #e0e0e0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 2px blue; /* Bordure de la table en bleu */
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid blue; /* Bordure des cellules en bleu */
+}
+
+th {
+    background-color: #d0e7ff; /* Fond bleu clair pour les en-têtes (optionnel) */
+    color: #001f5b; /* Texte en bleu foncé */
+}
+
+td {
+    background-color: #f9f9f9; /* Fond gris clair pour les cellules (optionnel) */
+}
 
     </style>
 </head>
 <body>
-    <header>
-        <!-- Vous pouvez ajouter un en-tête ici si nécessaire -->
-    </header>
- 
+    
     <div class="contenu">
         <nav class="nav flex-column">
             <a href="acceuilAppli.php">
@@ -78,7 +101,6 @@ try {
                 <img src="icons/gauche.png" alt="logo" width="30" height="24"> Réduire
             </a>
         </nav>
-
         <article>
             <a href="rechercher.php">
                 <button type="button" class="btn btn-outline-primary">
@@ -97,40 +119,46 @@ try {
                     <input type="text" placeholder="Rechercher une entreprise">
                     <button>Ajouter</button>
                 </div>
-                <table>
-                    <thead>
+            <h2>Liste des entreprises</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opérations</th>
+                        <th>Entreprise</th>
+                        <th>Responsable</th>
+                        <th>Adresse</th>
+                        <th>Site</th>
+                        <th>specialite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($result) > 0): ?>
+                        <?php foreach ($result as $row): ?>
+                            <tr>
+                                <td class="action-buttons">
+                                    <a href="details.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/voir.png" alt="logo" width="30" height="24"></a>
+                                    <?php if ($_SESSION['user_role'] === 'professeur'): ?>
+                                        <a href="edit.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/modifier.png" alt="logo" width="30" height="24"></a>
+                                        <a href="delete.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/supprimer.png" alt="logo" width="30" height="24"></a>
+                                        <a href="add.php"><img src="icons/ajouter.png" alt="logo" width="30" height="24"></a>
+                                    <?php elseif ($_SESSION['user_role'] === 'etudiant'): ?>
+                                        <a href="InscriptionAppli.php"><img src="icons/inscrire.png" alt="logo" width="30" height="24"></a>
+                                    <?php endif; ?>
+                                <td><?= htmlspecialchars($row['raison_sociale']); ?></td>
+                                <td><?= htmlspecialchars($row['nom_resp']); ?></td>
+                                <td><?= htmlspecialchars($row['rue_entreprise'] . ', ' . $row['cp_entreprise'] . ' ' . $row['ville_entreprise']); ?></td>
+                                <td><a href="<?= htmlspecialchars($row['site_entreprise']); ?>">Lien</a></td>
+                                <td><?= htmlspecialchars($row['specialite'] ?: 'Aucune spécialité'); ?></td> <!-- Si aucune spécialité -->
+                                </tr>                           
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <th>Opérations</th>
-                            <th>Entreprise</th>
-                            <th>Responsable</th>
-                            <th>Adresse</th>
-                            <th>Site</th>
+                            <td colspan="5">Aucune entreprise trouvée.</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (count($result) > 0) {
-                            // Parcours des résultats et affichage dans le tableau
-                            foreach ($result as $row) {
-                                echo "<tr>";
-                                echo "<td class='action-buttons'>
-                                        <button>Voir</button>
-                                        <button>Modifier</button>
-                                        <button>Supprimer</button>
-                                      </td>";
-                                echo "<td>" . htmlspecialchars($row['raison_sociale']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['nom_resp']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['rue_entreprise'] . ', ' . $row['cp_entreprise'] . ' ' . $row['ville_entreprise']) . "</td>";
-                                echo "<td><a href='" . htmlspecialchars($row['site_entreprise']) . "'>Lien</a></td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>Aucune donnée trouvée.</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </article>
     </div>
 </body>
