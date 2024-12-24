@@ -13,12 +13,13 @@ require_once('connexion.php');
 
 try {
     // Requête SQL avec table intermédiaire
-    $sql = 'SELECT entreprise.raison_sociale, entreprise.nom_contact, entreprise.nom_resp, 
-                   entreprise.rue_entreprise, entreprise.cp_entreprise, entreprise.ville_entreprise, 
-                   entreprise.site_entreprise, specialite.libelle AS specialite
-            FROM entreprise
-            LEFT JOIN spec_entreprise ON entreprise.num_entreprise = spec_entreprise.num_entreprise
-            LEFT JOIN specialite ON spec_entreprise.num_spec = specialite.num_spec';
+    $sql = 'SELECT entreprise.num_entreprise, entreprise.raison_sociale, entreprise.nom_contact, 
+    entreprise.nom_resp, entreprise.rue_entreprise, entreprise.cp_entreprise, 
+    entreprise.ville_entreprise, entreprise.site_entreprise, 
+    specialite.libelle AS specialite
+FROM entreprise
+LEFT JOIN spec_entreprise ON entreprise.num_entreprise = spec_entreprise.num_entreprise
+LEFT JOIN specialite ON spec_entreprise.num_spec = specialite.num_spec';
     
     $query = $db->prepare($sql);
     $query->execute();
@@ -70,6 +71,9 @@ td {
     background-color: #f9f9f9; /* Fond gris clair pour les cellules (optionnel) */
 }
 
+.action-buttons img {
+    filter: invert(20%) sepia(70%) saturate(500%) hue-rotate(190deg) brightness(100%) contrast(90%);
+}
     </style>
 </head>
 <body>
@@ -115,10 +119,6 @@ td {
             <hr>
 
             <div class="content">
-                <div class="header">
-                    <input type="text" placeholder="Rechercher une entreprise">
-                    <button>Ajouter</button>
-                </div>
             <h2>Liste des entreprises</h2>
             <table>
                 <thead>
@@ -135,14 +135,14 @@ td {
                     <?php if (count($result) > 0): ?>
                         <?php foreach ($result as $row): ?>
                             <tr>
-                                <td class="action-buttons">
-                                    <a href="details.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/voir.png" alt="logo" width="30" height="24"></a>
+                            <td class="action-buttons">
+
+                                <a href="InscriptionAppli.php"><img src="icons/inscrire.png" alt="logo" width="30" height="24"></a>
+                                <a href="details.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/voir.png" alt="logo" width="30" height="24"></a>
                                     <?php if ($_SESSION['user_role'] === 'professeur'): ?>
-                                        <a href="edit.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/modifier.png" alt="logo" width="30" height="24"></a>
-                                        <a href="delete.php?id=<?= urlencode($row['raison_sociale']); ?>"><img src="icons/supprimer.png" alt="logo" width="30" height="24"></a>
-                                        <a href="add.php"><img src="icons/ajouter.png" alt="logo" width="30" height="24"></a>
-                                    <?php elseif ($_SESSION['user_role'] === 'etudiant'): ?>
-                                        <a href="InscriptionAppli.php"><img src="icons/inscrire.png" alt="logo" width="30" height="24"></a>
+                                        <a href="modifier.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/modifier.png" alt="logo" width="30" height="24"></a>
+                                        <a href="supprimer.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/supprimer.png" alt="logo" width="30" height="24"></a>
+                                        
                                     <?php endif; ?>
                                 <td><?= htmlspecialchars($row['raison_sociale']); ?></td>
                                 <td><?= htmlspecialchars($row['nom_resp']); ?></td>
