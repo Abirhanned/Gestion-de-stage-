@@ -20,9 +20,8 @@ Le fichier  deconnexion.php est le fichier qui gère la déconnexion des utilisa
 Le fichier acceuilAppli.php est la page d'accueil de l'application.
 
 Le fichier EntrepriseAppli.php est la page principale pour la gestion des entreprises. Elle regroupe les différentes fonctionnalités, comme l'ajout, la modification, la suppression , la recherche, les details des entreprises et l'inscription dans une interface centralisée. Ces fonctionnalités s'appuient sur plusieurs fichiers spécifiques :
-
--ajouter.php, qui permet d'ajouter de nouvelles entreprises via un formulaire de saisie ;
--modifier.php, qui fournit une interface pour modifier les informations existantes des entreprises ;
--rechercher.php, qui facilite la recherche d'entreprises spécifiques en fonction de divers critères ;
--supprimer.php, qui gère la suppression sécurisée des entreprises de la base de données ;
--details.php, qui affiche des informations détaillées sur une entreprise particulière, incluant ses données associées.
+- ajouter.php, qui permet d'ajouter de nouvelles entreprises via un formulaire de saisie ;
+- modifier.php, qui fournit une interface pour modifier les informations existantes des entreprises ;
+- rechercher.php, qui facilite la recherche d'entreprises spécifiques en fonction de divers critères ;
+- supprimer.php, qui gère la suppression sécurisée des entreprises de la base de données ;
+- details.php, qui affiche des informations détaillées sur une entreprise particulière, incluant ses données associées.
