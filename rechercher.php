@@ -182,11 +182,11 @@ if (!empty($raison_sociale) || !empty($ville) || !empty($specialite)) {
                         <?php endforeach; ?>
                     <?php elseif ($searchPerformed): ?>
                         <tr>
-                            <td colspan="5">Aucun résultat trouvé.</td>
+                            <td colspan="6">Aucun résultat trouvé.</td>
                         </tr>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5">Effectuez une recherche pour voir les résultats.</td>
+                            <td colspan="6">Effectuez une recherche pour voir les résultats.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
