@@ -374,7 +374,7 @@ textarea {
                     <?= htmlspecialchars($spec['libelle']); ?>
                 </label>
             <?php endforeach; ?>
-        <?php else: ?>
+        <?php else: ?> 
             <p>Aucune spécialité disponible.</p>
         <?php endif; ?>
           </div>
