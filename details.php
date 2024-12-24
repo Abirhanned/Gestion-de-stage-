@@ -12,7 +12,7 @@ if (!$id) {
 }
 
 // Requête pour obtenir les détails de l'entreprise
-$query = $db->prepare('SELECT * FROM entreprise WHERE raison_sociale = :id');
+$query = $db->prepare('SELECT * FROM entreprise WHERE num_entreprise = :id');
 $query->execute(['id' => $id]);
 $entreprise = $query->fetch(PDO::FETCH_ASSOC);
 
