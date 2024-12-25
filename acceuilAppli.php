@@ -38,10 +38,6 @@ if (!isset($_SESSION['user_login'])) {
             Aide</a>
 			<a href="deconnexion.php"> <img src="icons/deconnexion.png" alt="logo" width="30" height="24" >
             Deconnexion</a>
-			<a href="developper.php"> <img src="icons/droite.png" alt="logo" width="30" height="24" >
-            Developper</a>
-			<a href="reduire.php"> <img src="icons/gauche.png" alt="logo" width="30" height="24" >
-            Reduire</a>
 		</nav>
 			
 		<article>
