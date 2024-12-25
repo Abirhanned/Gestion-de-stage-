@@ -25,3 +25,5 @@ Le fichier EntrepriseAppli.php est la page principale pour la gestion des entrep
 - rechercher.php, qui facilite la recherche d'entreprises spécifiques en fonction de divers critères ;
 - supprimer.php, qui gère la suppression sécurisée des entreprises de la base de données ;
 - details.php, qui affiche des informations détaillées sur une entreprise particulière, incluant ses données associées.
+
+Le fichier EntrepriseAppli.php  aussi offre des fonctionnalités interactives permettant aux utilisateurs de ajouter ou supprimer des colonnes affichées dans le tableau, directement depuis l'interface de la page.
