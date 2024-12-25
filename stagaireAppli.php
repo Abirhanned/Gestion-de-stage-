@@ -13,13 +13,14 @@ require_once('connexion.php');
 
 try {
     // Requête SQL avec table intermédiaire
-    $sql = 'SELECT entreprise.num_entreprise, entreprise.raison_sociale, entreprise.nom_contact, 
-    entreprise.nom_resp, entreprise.rue_entreprise, entreprise.cp_entreprise, 
-    entreprise.ville_entreprise, entreprise.site_entreprise, 
-    specialite.libelle AS specialite
-FROM entreprise
-LEFT JOIN spec_entreprise ON entreprise.num_entreprise = spec_entreprise.num_entreprise
-LEFT JOIN specialite ON spec_entreprise.num_spec = specialite.num_spec';
+    $sql = 'SELECT etudiant.num_etudiant, etudiant.nom_etudiant, etudiant.prenom_etudiant, professeur.nom_prof, professeur.prenom_prof, GROUP_CONCAT(entreprise.raison_sociale) AS entreprise
+FROM etudiant
+LEFT JOIN stage ON stage.num_etudiant = etudiant.num_etudiant
+LEFT JOIN entreprise ON entreprise.num_entreprise = stage.num_entreprise
+LEFT JOIN professeur ON professeur.num_prof = stage.num_prof
+GROUP BY num_etudiant';
+
+
     
     $query = $db->prepare($sql);
     $query->execute();
@@ -28,8 +29,6 @@ LEFT JOIN specialite ON spec_entreprise.num_spec = specialite.num_spec';
     echo "Erreur : " . $e->getMessage();
     exit();
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -77,16 +76,15 @@ td {
     </style>
 </head>
 <body>
-    
     <div class="contenu">
         <nav class="nav flex-column">
             <a href="acceuilAppli.php">
                 <img src="icons/home.png" alt="logo" width="30" height="24"> Accueil
             </a>
-            <a href="EntrepriseAppli.php" class="clic">
+            <a href="EntrepriseAppli.php" >
                 <img src="icons/entreprise.png" alt="logo" width="30" height="24"> Entreprise
             </a>
-            <a href="stagaireAppli.php">
+            <a href="stagaireAppli.php" class="clic">
                 <img src="icons/stage.png" alt="logo" width="30" height="24"> Stagiaire
             </a>
             <a href="InscriptionAppli.php">
@@ -106,29 +104,27 @@ td {
             </a>
         </nav>
         <article>
-            <a href="rechercher.php">
+            <a href="rechercherEtudiant.php">
                 <button type="button" class="btn btn-outline-primary">
-                    <img src="icons/rechercher.png" alt="logo" width="30" height="24"> Rechercher une entreprise
+                    <img src="icons/rechercher.png" alt="logo" width="30" height="24"> Rechercher un stagiaire existant
                 </button>
             </a>
-            <a href="ajouter.php">
+            <a href="ajouterEtudiant.php">
                 <button type="button" class="btn btn-outline-primary">
-                    <img src="icons/ajouter.png" alt="logo" width="30" height="24"> Ajouter une entreprise
+                    <img src="icons/ajouter.png" alt="logo" width="30" height="24"> Ajouter un étudiant
                 </button>
             </a>
             <hr>
 
             <div class="content">
-            <h2>Liste des entreprises</h2>
+            <h2>Liste des étudiants</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Opérations</th>
-                        <th>Entreprise</th>
-                        <th>Responsable</th>
-                        <th>Adresse</th>
-                        <th>Site</th>
-                        <th>specialite</th>
+                        <th>Etudiant</th>
+                        <th>Entreprises</th>
+                        <th>Professeur</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,19 +133,16 @@ td {
                             <tr>
                             <td class="action-buttons">
 
-                                <a href="InscriptionAppli.php"><img src="icons/inscrire.png" alt="logo" width="30" height="24"></a>
-                                <a href="details.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/voir.png" alt="logo" width="30" height="24"></a>
-                                    <?php if ($_SESSION['user_role'] === 'professeur'): ?>
-                                        <a href="modifier.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/modifier.png" alt="logo" width="30" height="24"></a>
-                                        <a href="supprimer.php?id=<?= urlencode($row['num_entreprise']); ?>"><img src="icons/supprimer.png" alt="logo" width="30" height="24"></a>
-                                        
+                                <a href="voirEtudiant.php?id=<?= urlencode($row['num_etudiant']); ?>"><img src="icons/voir.png" alt="logo" width="30" height="24"></a>
+                                <?php if ($_SESSION['user_role'] === 'professeur'): ?>
+                                    <a href="modifierEtudiant.php?id=<?= urlencode($row['num_etudiant']); ?>"><img src="icons/modifier.png" alt="logo" width="30" height="24"></a>
+                                    <a href="supprimerEtudiant.php?id=<?= urlencode($row['num_etudiant']); ?>"><img src="icons/supprimer.png" alt="logo" width="30" height="24"></a>
+                               
                                     <?php endif; ?>
-                                <td><?= htmlspecialchars($row['raison_sociale']); ?></td>
-                                <td><?= htmlspecialchars($row['nom_resp']); ?></td>
-                                <td><?= htmlspecialchars($row['rue_entreprise'] . ', ' . $row['cp_entreprise'] . ' ' . $row['ville_entreprise']); ?></td>
-                                <td><a href="<?= htmlspecialchars($row['site_entreprise']); ?>">Lien</a></td>
-                                <td><?= htmlspecialchars($row['specialite'] ?: 'Aucune spécialité'); ?></td> <!-- Si aucune spécialité -->
-                                </tr>                           
+                                <td><?= htmlspecialchars($row['nom_etudiant']. ' ' . $row['prenom_etudiant']); ?></td>
+                                <td><?= htmlspecialchars($row['entreprise']); ?></td>
+                                <td><?= htmlspecialchars($row['nom_prof'] . ' ' . $row['prenom_prof']); ?></td>
+                               </tr>                           
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
