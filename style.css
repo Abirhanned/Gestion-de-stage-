@@ -39,7 +39,7 @@ article{
 
 
 /* Responsive layout */
-@media (max-width: 600px;) {
+@media (max-width: 600px) {
   div.contenu {
     flex-direction: column;
 
