@@ -110,7 +110,7 @@ require_once('cloose.php');
 
 <!DOCTYPE html>
 <html lang="fr">
-<>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une entreprise</title>
