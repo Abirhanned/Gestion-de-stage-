@@ -27,3 +27,5 @@ Le fichier EntrepriseAppli.php est la page principale pour la gestion des entrep
 - details.php, qui affiche des informations détaillées sur une entreprise particulière, incluant ses données associées.
 
 Le fichier EntrepriseAppli.php  aussi offre des fonctionnalités interactives permettant aux utilisateurs de ajouter ou supprimer des colonnes affichées dans le tableau, directement depuis l'interface de la page.
+
+Nous avons effectué un changement dans la base de données geststages.sql en ajoutant une colonne adresse dans la table entreprise. Cette colonne regroupe la rue, le code postal et la ville, afin de simplifier la gestion de l'affichage de l'adresse dans le tableau.
