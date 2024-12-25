@@ -123,12 +123,6 @@ try {
         <a href="deconnexion.php">
             <img src="icons/deconnexion.png" alt="logo" width="30" height="24"> Déconnexion
         </a>
-        <a href="developper.php">
-            <img src="icons/droite.png" alt="logo" width="30" height="24"> Développer
-        </a>
-        <a href="reduire.php">
-            <img src="icons/gauche.png" alt="logo" width="30" height="24"> Réduire
-        </a>
     </nav>
 
     <article>
