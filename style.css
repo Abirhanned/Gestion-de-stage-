@@ -8,6 +8,9 @@ nav{
 	flex-direction: column;
 	padding: 0px;
 	margin: 5px;
+	 gap: 10px;
+	  height: 100vh;
+         overflow-y: auto; 
 }
 
 nav a {
@@ -17,6 +20,8 @@ nav a {
   padding: 10px;
   margin: 0px;
   text-decoration: none;
+  margin: 10px 0; 
+  padding: 15px 10px; 	
 }
 
 nav a:hover {
