@@ -16,6 +16,9 @@ if (!isset($_SESSION['user_login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
     <style>
+         body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
         .droite {
             float: right;
@@ -38,6 +41,14 @@ if (!isset($_SESSION['user_login'])) {
 
         .important{
             color: red
+        }
+        
+        .nav a img {
+            margin-right: 8px;
+        }
+
+        .nav a:hover {
+            background-color: #1c1c1c;
         }
     </style>
 </head>
